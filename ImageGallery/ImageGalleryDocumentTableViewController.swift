@@ -69,7 +69,23 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
         if editingStyle == .delete {
             // Permanently Delete
             if indexPath.section == deletedSection {
-                let _ = removeCell(at: indexPath)
+                // Present dialog before permanently deleting
+                let dialogMessage = UIAlertController(
+                    title: "Confirm",
+                    message: "Are you sure you want to delete this?",
+                    preferredStyle: .alert)
+                let ok = UIAlertAction(
+                    title: "OK",
+                    style: .default,
+                    handler: {(_) in let _ = self.removeCell(at: indexPath) })
+                let cancel = UIAlertAction(
+                    title: "Cancel",
+                    style: .cancel,
+                    handler: nil)
+                dialogMessage.addAction(ok)
+                dialogMessage.addAction(cancel)
+                // Present dialog message to user
+                self.present(dialogMessage, animated: true, completion: nil)
                 return
             }
             // Move To Recently Deleted
