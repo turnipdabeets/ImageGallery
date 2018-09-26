@@ -57,12 +57,12 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
         return cell
     }
     
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        // Default is true so currently not necessary to implement
-        return true
-    }
+//    // Override to support conditional editing of the table view.
+//    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+//        // Return false if you do not want the specified item to be editable.
+//        // Default is true so currently not necessary to implement
+//        return true
+//    }
     
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -168,7 +168,7 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
     // Preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let indexPath = tableView.indexPathForSelectedRow,
-            let vc = segue.destination as? ImageGalleryViewController {
+            let vc = segue.destination as? ImageGalleryCollectionViewController {
             // pass images to view controller.
             let gallery = imageGalleryDocuments[indexPath.section].items[indexPath.row]
             vc.images = gallery
