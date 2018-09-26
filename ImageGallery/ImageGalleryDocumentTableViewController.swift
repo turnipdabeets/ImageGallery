@@ -171,7 +171,7 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
             let vc = segue.destination as? ImageGalleryCollectionViewController {
             // pass images to view controller.
             let gallery = imageGalleryDocuments[indexPath.section].items[indexPath.row]
-            vc.images = gallery
+            vc.imagesTest = gallery
         }
     }
 }
