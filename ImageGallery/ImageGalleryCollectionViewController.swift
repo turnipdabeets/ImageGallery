@@ -28,6 +28,11 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
 //        collectionView!.dropDelegate = self
         print("images", images ?? "Nothing selected")
     }
+    
+    // Cell Resizing on Device Rotation
+    public override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        collectionView?.collectionViewLayout.invalidateLayout()
+    }
 
     /*
     // MARK: - Navigation
