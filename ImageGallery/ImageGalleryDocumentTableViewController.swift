@@ -10,14 +10,20 @@ import UIKit
 
 class ImageGalleryDocumentTableViewController: UITableViewController {
     
-    // This VC assumes currentDocuments are at idx 0 and deletedDocuments are at the last idx
+    // Assumes currentDocuments are at idx 0 and deletedDocuments are at the last idx
     var imageGalleryDocuments = [
         (title: "", items:["One", "Two", "Three"]),
-        (title: "Deleted", items: ["Test"]),
+        (title: "Recently Deleted", items: ["Test"]),
         ]
+    var deletedSection: Int {
+        return imageGalleryDocuments.count - 1
+    }
+    var currentSection: Int {
+        return 0
+    }
     
     @IBAction func newImageGallery(_ sender: UIBarButtonItem) {
-        imageGalleryDocuments[0].items += ["Untitled".madeUnique(withRespectTo: imageGalleryDocuments[0].items)]
+        imageGalleryDocuments[currentSection].items += ["Untitled".madeUnique(withRespectTo: imageGalleryDocuments[currentSection].items)]
         tableView.reloadData()
     }
     
@@ -61,16 +67,17 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Keep model and tableview in sync
+            // Permanently Delete
+            if indexPath.section == deletedSection {
+                let _ = removeCell(at: indexPath)
+                return
+            }
+            // Move To Recently Deleted
             tableView.performBatchUpdates({
-                // Move in model
-                let removeDocument = imageGalleryDocuments[indexPath.section].items.remove(at: indexPath.row)
-                let lastIndex = imageGalleryDocuments.count - 1
-                imageGalleryDocuments[lastIndex].items += [removeDocument]
-                // Delete the row from the data source
-                tableView.deleteRows(at: [indexPath], with: .fade)
-                let idxPath = IndexPath(row: imageGalleryDocuments[1].items.count - 1, section: 1)
-                tableView.insertRows(at: [idxPath], with: .fade)
+                // remove cell
+                let removed = removeCell(at: indexPath)
+                // add cell to Recently Deleted
+                add(cell: removed, to: deletedSection)
             })
             
         } else if editingStyle == .insert {
@@ -80,17 +87,16 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deletedDocumentSection = imageGalleryDocuments.count - 1
-        if indexPath.section == deletedDocumentSection {
+        if indexPath.section == deletedSection {
             // Swiping Delete Row Only
             let recoverAction = UIContextualAction(style: .destructive, title: "Recover") { (action, view, handler) in
                 // Recover Document
                 tableView.performBatchUpdates({
-                    let removeDocument = self.imageGalleryDocuments[indexPath.section].items.remove(at: indexPath.row)
-                    self.imageGalleryDocuments[0].items += [removeDocument]
-                    tableView.deleteRows(at: [indexPath], with: .fade)
-                    let insertPath = IndexPath(row: self.imageGalleryDocuments[0].items.count - 1, section: 0)
-                    tableView.insertRows(at: [insertPath], with: .fade)
+                    // remove cell
+                    let removed = self.removeCell(at: indexPath)
+                    // move cell to Current
+                    self.add(cell: removed, to: self.currentSection)
+                    // complete action
                     handler(true)
                 })
             }
@@ -100,6 +106,22 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
         }else {
             return nil
         }
+    }
+    
+    // Convenience func to sync model and tableView on deletion
+    func removeCell(at indexPath: IndexPath) -> String {
+        let removedCell = imageGalleryDocuments[indexPath.section].items.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .fade)
+        return removedCell
+    }
+    // Convenience func to sync model and tableView on addition
+    func add(cell: String, to section: Int){
+        imageGalleryDocuments[section].items += [cell]
+        tableView.insertRows(
+            at: [IndexPath(
+                row: imageGalleryDocuments[section].items.count - 1,
+                section: section)],
+            with: .fade)
     }
     
     /*
