@@ -79,6 +79,29 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
         }    
     }
     
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deletedDocumentSection = imageGalleryDocuments.count - 1
+        if indexPath.section == deletedDocumentSection {
+            // Swiping Delete Row Only
+            let recoverAction = UIContextualAction(style: .destructive, title: "Recover") { (action, view, handler) in
+                // Recover Document
+                tableView.performBatchUpdates({
+                    let removeDocument = self.imageGalleryDocuments[indexPath.section].items.remove(at: indexPath.row)
+                    self.imageGalleryDocuments[0].items += [removeDocument]
+                    tableView.deleteRows(at: [indexPath], with: .fade)
+                    let insertPath = IndexPath(row: self.imageGalleryDocuments[0].items.count - 1, section: 0)
+                    tableView.insertRows(at: [insertPath], with: .fade)
+                    handler(true)
+                })
+            }
+            recoverAction.backgroundColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
+            let configuration = UISwipeActionsConfiguration(actions: [recoverAction])
+            return configuration
+        }else {
+            return nil
+        }
+    }
+    
     /*
      // Override to support rearranging the table view.
      override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
