@@ -72,7 +72,7 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
                 // Present dialog before permanently deleting
                 let dialogMessage = UIAlertController(
                     title: "Confirm",
-                    message: "Are you sure you want to delete this?",
+                    message: "Are you sure you want to permanently delete this gallery?",
                     preferredStyle: .alert)
                 let ok = UIAlertAction(
                     title: "OK",
@@ -155,14 +155,23 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
      }
      */
     
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
+    // MARK: - Navigation
     
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        // Prevent Segue from Recently Deleted
+        if let indexPath = tableView.indexPathForSelectedRow, indexPath.section == deletedSection {
+            return false
+        }
+        return true
+    }
+    
+    // Preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let indexPath = tableView.indexPathForSelectedRow,
+            let vc = segue.destination as? ImageGalleryViewController {
+            // pass images to view controller.
+            let gallery = imageGalleryDocuments[indexPath.section].items[indexPath.row]
+            vc.images = gallery
+        }
+    }
 }

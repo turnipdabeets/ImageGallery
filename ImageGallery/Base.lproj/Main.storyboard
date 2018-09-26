@@ -63,6 +63,9 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="BYZ-38-t0r" kind="showDetail" id="Fn7-Ne-95S"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -101,4 +104,7 @@
             <point key="canvasLocation" x="101.44927536231884" y="454.89130434782612"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="Fn7-Ne-95S"/>
+    </inferredMetricsTieBreakers>
 </document>

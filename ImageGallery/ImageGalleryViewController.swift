@@ -9,10 +9,12 @@
 import UIKit
 
 class ImageGalleryViewController: UIViewController {
-
+    
+    var images: String?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        print(images ?? "nothing")
         // Do any additional setup after loading the view.
     }
 
