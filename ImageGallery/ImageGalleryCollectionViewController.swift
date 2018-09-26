@@ -10,7 +10,7 @@ import UIKit
 
 private let reuseIdentifier = "ImageCell"
 
-class ImageGalleryCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class ImageGalleryCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate {
     
     var images: String?
     
@@ -21,6 +21,11 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // enable drag for iPhone
+        collectionView?.dragInteractionEnabled = true
+        // set delegate
+        collectionView!.dragDelegate = self
+//        collectionView!.dropDelegate = self
         print("images", images ?? "Nothing selected")
     }
 
@@ -44,7 +49,17 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
         // Configure the cell
-        cell.backgroundColor = #colorLiteral(red: 0.9117823243, green: 0.9118037224, blue: 0.9117922187, alpha: 1)
+        
+        /////
+        func random() -> CGFloat {
+            return CGFloat(arc4random()) / CGFloat(UInt32.max)
+        }
+        cell.backgroundColor = UIColor(red:   random(),
+                                       green: random(),
+                                       blue:  random(),
+                                       alpha: 1.0)
+        /////
+        
         if let imageCell = cell as? ImageCollectionViewCell {
             imageCell.imageView.image = #imageLiteral(resourceName: "cat.png")
         }
@@ -58,6 +73,26 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
         let aspectRatio = image.size.width / image.size.height
         let imageHeight = imageWidth / aspectRatio
         return CGSize(width: imageWidth, height: imageHeight)
+    }
+    
+    // MARK: UICollectionViewDragDelegate
+    
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+//        session.localContext = collectionView
+        return dragItems(at: indexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
+        return dragItems(at: indexPath)
+    }
+    
+    private func dragItems(at indexPath: IndexPath) -> [UIDragItem] {
+        if let imageCell = collectionView?.cellForItem(at: indexPath) as? ImageCollectionViewCell, let image = imageCell.imageView.image{
+            let dragItem = UIDragItem(itemProvider: NSItemProvider(object: image))
+            dragItem.localObject = image
+            return [dragItem]
+        }
+        return []
     }
 
     // MARK: UICollectionViewDelegate
