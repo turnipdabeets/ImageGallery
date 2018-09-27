@@ -12,8 +12,7 @@ private let reuseIdentifier = "ImageCell"
 
 class ImageGalleryCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate, UICollectionViewDropDelegate {
     
-    var imagesTest: ImageGallery?
-    var images = [#imageLiteral(resourceName: "cat.png"), #imageLiteral(resourceName: "cat.png"), #imageLiteral(resourceName: "cat.png"), #imageLiteral(resourceName: "cat.png")]
+    var gallery: ImageGallery?
     
     private var imageWidth: CGFloat {
         guard let collectionView = collectionView else { return 0 }
@@ -27,7 +26,6 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
         // set delegate
         collectionView?.dragDelegate = self
         collectionView?.dropDelegate = self
-        print("images2", imagesTest ?? "none" )
     }
     
     // Cell Resizing on Device Rotation
@@ -35,28 +33,17 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
         collectionView?.collectionViewLayout.invalidateLayout()
     }
     
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using [segue destinationViewController].
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
     // MARK: UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // TODO
-        return images.count
+        return gallery?.images.count ?? 0
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-        // Configure the cell
         
-        /////
+        ///// Random Colors to see how often images are reloaded
         func random() -> CGFloat {
             return CGFloat(arc4random()) / CGFloat(UInt32.max)
         }
@@ -64,12 +51,39 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                                        green: random(),
                                        blue:  random(),
                                        alpha: 1.0)
-        /////
+        ///// ----
         
-        if let imageCell = cell as? ImageCollectionViewCell {
-            // TODO FIX so not all same cat for external drops
-            imageCell.imageView.image = #imageLiteral(resourceName: "cat.png")
+        // Configure the cell with URL
+        if let imageCell = cell as? ImageCollectionViewCell, let url = gallery?.images[indexPath.row].URL {
+            
+                // Start background thread so image loading does not make app unresponsive
+                DispatchQueue.global(qos: .userInitiated).async {
+                    let session = URLSession(configuration: .default)
+                    let downloadTask = session.dataTask(with: url.imageURL) { (data, response, error) in
+                        // The download has finished.
+                        if let e = error {
+                            print("Error downloading picture: \(e)")
+                        } else {
+                            // No errors found.
+                            if let res = response as? HTTPURLResponse {
+                                print("Downloaded picture with response code \(res.statusCode)")
+                                if let imageData = data {
+                                    // UI needs to be updated on main queue
+                                    DispatchQueue.main.async {
+                                        imageCell.imageView.image = UIImage(data: imageData)
+                                    }
+                                } else {
+                                    print("Couldn't get image: Image is nil")
+                                }
+                            } else {
+                                print("Couldn't get response code for some reason")
+                            }
+                        }
+                    }
+                    downloadTask.resume()
+                }
         }
+        print("return cell")
         return cell
     }
     
@@ -123,8 +137,8 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
             if let sourceIndexPath = item.sourceIndexPath {
                 if let image = item.dragItem.localObject as? UIImage {
                     collectionView.performBatchUpdates({
-                        images.remove(at: sourceIndexPath.item)
-                        images.insert(image, at: destinationIndexPath.item)
+                        gallery?.images.remove(at: sourceIndexPath.item)
+//                        gallery?.images.insert(image, at: destinationIndexPath.item)
                         collectionView.deleteItems(at: [sourceIndexPath])
                         collectionView.insertItems(at: [destinationIndexPath])
                     })
@@ -143,7 +157,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                         if let image = provider as? UIImage {
                             print("IMAGE", image)
                             placeholderContext.commitInsertion(dataSourceUpdates: { insertionIndexPath in
-                                self.images.insert(image, at: insertionIndexPath.item)
+//                                self.gallery?.images.insert(image, at: insertionIndexPath.item)
                             })
                         }
                     }
@@ -151,6 +165,16 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
             }
         }
     }
+    
+    /*
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using [segue destinationViewController].
+     // Pass the selected object to the new view controller.
+     }
+     */
     
     // MARK: UICollectionViewDelegate
     

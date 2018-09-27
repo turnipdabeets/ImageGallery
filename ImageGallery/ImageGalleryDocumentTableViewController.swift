@@ -13,7 +13,12 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
     // Assumes currentDocuments are at idx 0 and deletedDocuments are at the last idx
     var gallerySections = [
         (title: "Image Galleries", galleries:[
-            ImageGallery(title: "Untitled", images: [])
+            ImageGallery(
+                title: "Untitled",
+                images: [
+                    Image(URL: URL(string: "https://www.jamiesale-cartoonist.com/wp-content/uploads/cartoon-cat-free-1024x1024.png")!, aspectRatio: 1.0
+                    )
+                ])
             ]),
         (title: "Recently Deleted", galleries:[
             ImageGallery(title: "test", images: [])
@@ -176,7 +181,7 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
             let vc = segue.destination as? ImageGalleryCollectionViewController {
             // pass images to view controller.
             let gallery = gallerySections[indexPath.section].galleries[indexPath.row]
-            vc.imagesTest = gallery
+            vc.gallery = gallery
         }
     }
 }

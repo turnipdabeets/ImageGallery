@@ -20,7 +20,7 @@ struct Image {
 
 // Model representing a gallery with images.
 struct ImageGallery {
-    let identifier = UUID().uuidString
+//    let identifier = UUID().uuidString
     var title: String
     var images: [Image]
 }
