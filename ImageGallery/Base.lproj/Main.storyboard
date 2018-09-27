@@ -46,6 +46,23 @@
                                     <outlet property="imageView" destination="6qv-xa-WQ9" id="fXa-v9-BXr"/>
                                 </connections>
                             </collectionViewCell>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DropPlaceholderCell" id="d5J-UX-i0C">
+                                <rect key="frame" x="65.5" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="y20-2J-F9w">
+                                            <rect key="frame" x="15" y="15" width="20" height="20"/>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="y20-2J-F9w" firstAttribute="centerX" secondItem="d5J-UX-i0C" secondAttribute="centerX" id="50R-4b-IYA"/>
+                                    <constraint firstItem="y20-2J-F9w" firstAttribute="centerY" secondItem="d5J-UX-i0C" secondAttribute="centerY" id="meJ-uG-iMj"/>
+                                </constraints>
+                            </collectionViewCell>
                         </cells>
                         <connections>
                             <outlet property="dataSource" destination="Yxy-4g-6FV" id="pLW-nG-UZj"/>
@@ -55,7 +72,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CVz-wb-cwN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="100.00000000000001" y="-235.59782608695653"/>
+            <point key="canvasLocation" x="100" y="-236.13281249999997"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="KSR-aa-Wkd">

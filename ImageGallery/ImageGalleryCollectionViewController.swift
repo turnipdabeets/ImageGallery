@@ -46,7 +46,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
      */
     
     // MARK: UICollectionViewDataSource
-    
+
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // TODO
         return images.count
@@ -67,6 +67,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
         /////
         
         if let imageCell = cell as? ImageCollectionViewCell {
+            // TODO FIX so not all same cat for external drops
             imageCell.imageView.image = #imageLiteral(resourceName: "cat.png")
         }
         return cell
@@ -102,6 +103,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     }
     
     // MARK: UICollectionViewDropDelegate
+    
     func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
         return session.canLoadObjects(ofClass: UIImage.self)
     }
@@ -114,9 +116,9 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
-        print("CC", coordinator)
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
         for item in coordinator.items {
+            // Local Drop
             if let sourceIndexPath = item.sourceIndexPath {
                 if let image = item.dragItem.localObject as? UIImage {
                     collectionView.performBatchUpdates({
@@ -125,6 +127,24 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                         collectionView.deleteItems(at: [sourceIndexPath])
                         collectionView.insertItems(at: [destinationIndexPath])
                     })
+                }
+            // External Drop
+            } else {
+                let placeholderContext = coordinator.drop(
+                    item.dragItem,
+                    to:UICollectionViewDropPlaceholder(
+                        insertionIndexPath: destinationIndexPath,
+                        reuseIdentifier: "DropPlaceholderCell"
+                    )
+                )
+                item.dragItem.itemProvider.loadObject(ofClass: UIImage.self) { (provider, error) in
+                    DispatchQueue.main.async {
+                        if let image = provider as? UIImage {
+                            placeholderContext.commitInsertion(dataSourceUpdates: { insertionIndexPath in
+                                self.images.insert(image, at: insertionIndexPath.item)
+                            })
+                        }
+                    }
                 }
             }
         }
