@@ -12,9 +12,11 @@ import Foundation
 struct Image {
     var URL: URL?
     var aspectRatio: Double?
+    var data: Data?
     init(URL: URL, aspectRatio:Double) {
         self.URL = URL
         self.aspectRatio = aspectRatio
+//        self.data = data ?? nil
     }
 }
 

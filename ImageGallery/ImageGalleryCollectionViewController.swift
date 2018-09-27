@@ -36,7 +36,6 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     // MARK: UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // TODO
         return gallery?.images.count ?? 0
     }
     
@@ -71,6 +70,8 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                                     // UI needs to be updated on main queue
                                     DispatchQueue.main.async {
                                         imageCell.imageView.image = UIImage(data: imageData)
+                                        // TODO REMOVE?
+                                        self.gallery?.images[indexPath.row].data = imageData
                                     }
                                 } else {
                                     print("Couldn't get image: Image is nil")
@@ -83,16 +84,17 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                     downloadTask.resume()
                 }
         }
-        print("return cell")
         return cell
     }
     
     // MARK: UICollectionViewDelegateFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let image = #imageLiteral(resourceName: "cat.png")
-        let aspectRatio = image.size.width / image.size.height
-        let imageHeight = imageWidth / aspectRatio
+        guard let aspectRatio = gallery?.images[indexPath.row].aspectRatio else {
+            return CGSize(width: 10, height: 10)
+        }
+        // let aspectRatio = image.size.width / image.size.height
+        let imageHeight = imageWidth / CGFloat(aspectRatio)
         return CGSize(width: imageWidth, height: imageHeight)
     }
     
@@ -108,8 +110,10 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     }
     
     private func dragItems(at indexPath: IndexPath) -> [UIDragItem] {
-        if let imageCell = collectionView?.cellForItem(at: indexPath) as? ImageCollectionViewCell, let image = imageCell.imageView.image{
-            let dragItem = UIDragItem(itemProvider: NSItemProvider(object: image))
+        if let _ = collectionView?.cellForItem(at: indexPath) as? ImageCollectionViewCell,
+            let image = gallery?.images[indexPath.row]{
+            let dragItem = UIDragItem(itemProvider: NSItemProvider(object: UIImage(data: image.data!)!))
+            // pass Image type for local droping
             dragItem.localObject = image
             return [dragItem]
         }
@@ -119,6 +123,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     // MARK: UICollectionViewDropDelegate
     
     func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
+        //TODO, local doesnt have URL but need this for remote
         return session.canLoadObjects(ofClass: UIImage.self)
     }
     
@@ -135,10 +140,11 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
             print("ITEM", item.dragItem)
             // Local Drop
             if let sourceIndexPath = item.sourceIndexPath {
-                if let image = item.dragItem.localObject as? UIImage {
+                if let image = item.dragItem.localObject as? Image {
+                    print("IMAGE")
                     collectionView.performBatchUpdates({
                         gallery?.images.remove(at: sourceIndexPath.item)
-//                        gallery?.images.insert(image, at: destinationIndexPath.item)
+                        gallery?.images.insert(image, at: destinationIndexPath.item)
                         collectionView.deleteItems(at: [sourceIndexPath])
                         collectionView.insertItems(at: [destinationIndexPath])
                     })
