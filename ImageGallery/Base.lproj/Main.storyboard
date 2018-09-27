@@ -34,34 +34,23 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6qv-xa-WQ9">
                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         </imageView>
-                                    </subviews>
-                                </view>
-                                <constraints>
-                                    <constraint firstItem="6qv-xa-WQ9" firstAttribute="leading" secondItem="IMo-ws-irc" secondAttribute="leading" id="OMk-UA-OaN"/>
-                                    <constraint firstItem="6qv-xa-WQ9" firstAttribute="top" secondItem="IMo-ws-irc" secondAttribute="top" id="dUu-fc-aU5"/>
-                                    <constraint firstAttribute="trailing" secondItem="6qv-xa-WQ9" secondAttribute="trailing" id="fwA-RX-OIZ"/>
-                                    <constraint firstAttribute="bottom" secondItem="6qv-xa-WQ9" secondAttribute="bottom" id="urW-R2-cn7"/>
-                                </constraints>
-                                <connections>
-                                    <outlet property="imageView" destination="6qv-xa-WQ9" id="fXa-v9-BXr"/>
-                                </connections>
-                            </collectionViewCell>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DropPlaceholderCell" id="d5J-UX-i0C">
-                                <rect key="frame" x="65.5" y="0.0" width="50" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="y20-2J-F9w">
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="3of-jd-gNP">
                                             <rect key="frame" x="15" y="15" width="20" height="20"/>
                                         </activityIndicatorView>
                                     </subviews>
                                 </view>
                                 <constraints>
-                                    <constraint firstItem="y20-2J-F9w" firstAttribute="centerX" secondItem="d5J-UX-i0C" secondAttribute="centerX" id="50R-4b-IYA"/>
-                                    <constraint firstItem="y20-2J-F9w" firstAttribute="centerY" secondItem="d5J-UX-i0C" secondAttribute="centerY" id="meJ-uG-iMj"/>
+                                    <constraint firstItem="3of-jd-gNP" firstAttribute="centerX" secondItem="IMo-ws-irc" secondAttribute="centerX" id="642-m4-wd8"/>
+                                    <constraint firstItem="6qv-xa-WQ9" firstAttribute="leading" secondItem="IMo-ws-irc" secondAttribute="leading" id="OMk-UA-OaN"/>
+                                    <constraint firstItem="6qv-xa-WQ9" firstAttribute="top" secondItem="IMo-ws-irc" secondAttribute="top" id="dUu-fc-aU5"/>
+                                    <constraint firstAttribute="trailing" secondItem="6qv-xa-WQ9" secondAttribute="trailing" id="fwA-RX-OIZ"/>
+                                    <constraint firstAttribute="bottom" secondItem="6qv-xa-WQ9" secondAttribute="bottom" id="urW-R2-cn7"/>
+                                    <constraint firstItem="3of-jd-gNP" firstAttribute="centerY" secondItem="IMo-ws-irc" secondAttribute="centerY" id="zhC-1k-Lcx"/>
                                 </constraints>
+                                <connections>
+                                    <outlet property="activityIndicator" destination="3of-jd-gNP" id="Xva-Wg-LX1"/>
+                                    <outlet property="imageView" destination="6qv-xa-WQ9" id="fXa-v9-BXr"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
                         <connections>

@@ -40,7 +40,8 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+        // Get cell by reuseIdentifier
+        var cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
         
         ///// Random Colors to see how often images are reloaded
         func random() -> CGFloat {
@@ -52,9 +53,10 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                                        alpha: 1.0)
         ///// ----
         
-        // Configure the cell with URL
+        // Configure the imageCell
         if let imageCell = cell as? ImageCollectionViewCell, let url = gallery?.images[indexPath.row].URL {
-            
+            // set activity indicator while loading
+                imageCell.loadingState = .isLoading
                 // Start background thread so image loading does not make app unresponsive
                 DispatchQueue.global(qos: .userInitiated).async {
                     let session = URLSession(configuration: .default)
@@ -69,8 +71,11 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                                 if let imageData = data {
                                     // UI needs to be updated on main queue
                                     DispatchQueue.main.async {
-                                        imageCell.imageView.image = UIImage(data: imageData)
-                                        // TODO REMOVE?
+                                        // Done loading
+                                        if let image = UIImage(data: imageData){
+                                            imageCell.loadingState = .loaded(image)
+                                        }
+                                        // TODO REMOVE DATA setting below, ONLY FOR TEST IMAGES WITHOUT DATA
                                         self.gallery?.images[indexPath.row].data = imageData
                                     }
                                 } else {
