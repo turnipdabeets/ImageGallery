@@ -16,6 +16,7 @@
 		A99F2C76215BF22C00432F21 /* ImageGalleryCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F2C75215BF22C00432F21 /* ImageGalleryCollectionViewController.swift */; };
 		A99F2C78215BF69300432F21 /* cat.png in Resources */ = {isa = PBXBuildFile; fileRef = A99F2C77215BF69300432F21 /* cat.png */; };
 		A99F2C7A215BF73500432F21 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F2C79215BF73500432F21 /* ImageCollectionViewCell.swift */; };
+		A99F2C7C215C6D5400432F21 /* ImageGallery.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F2C7B215C6D5400432F21 /* ImageGallery.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		A99F2C75215BF22C00432F21 /* ImageGalleryCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGalleryCollectionViewController.swift; sourceTree = "<group>"; };
 		A99F2C77215BF69300432F21 /* cat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cat.png; sourceTree = "<group>"; };
 		A99F2C79215BF73500432F21 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
+		A99F2C7B215C6D5400432F21 /* ImageGallery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGallery.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 				A99F2C77215BF69300432F21 /* cat.png */,
 				A91D99E0215AD697003D4997 /* Main.storyboard */,
 				A91D99F1215AD99A003D4997 /* ImageGalleryDocumentTableViewController.swift */,
+				A99F2C7B215C6D5400432F21 /* ImageGallery.swift */,
 				A91D99EE215AD6A6003D4997 /* Supporting Files */,
 				A91D99E8215AD69A003D4997 /* Info.plist */,
 				A99F2C75215BF22C00432F21 /* ImageGalleryCollectionViewController.swift */,
@@ -156,6 +159,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A99F2C7C215C6D5400432F21 /* ImageGallery.swift in Sources */,
 				A99F2C7A215BF73500432F21 /* ImageCollectionViewCell.swift in Sources */,
 				A99F2C76215BF22C00432F21 /* ImageGalleryCollectionViewController.swift in Sources */,
 				A91D99F2215AD99A003D4997 /* ImageGalleryDocumentTableViewController.swift in Sources */,

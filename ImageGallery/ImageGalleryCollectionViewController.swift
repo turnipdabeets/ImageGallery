@@ -12,7 +12,7 @@ private let reuseIdentifier = "ImageCell"
 
 class ImageGalleryCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate, UICollectionViewDropDelegate {
     
-    var imagesTest: String?
+    var imagesTest: ImageGallery?
     var images = [#imageLiteral(resourceName: "cat.png"), #imageLiteral(resourceName: "cat.png"), #imageLiteral(resourceName: "cat.png"), #imageLiteral(resourceName: "cat.png")]
     
     private var imageWidth: CGFloat {
@@ -27,7 +27,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
         // set delegate
         collectionView?.dragDelegate = self
         collectionView?.dropDelegate = self
-        print("images2", imagesTest ?? "Nothing selected")
+        print("images2", imagesTest ?? "none" )
     }
     
     // Cell Resizing on Device Rotation
@@ -118,6 +118,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
         for item in coordinator.items {
+            print("ITEM", item.dragItem)
             // Local Drop
             if let sourceIndexPath = item.sourceIndexPath {
                 if let image = item.dragItem.localObject as? UIImage {
@@ -140,6 +141,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                 item.dragItem.itemProvider.loadObject(ofClass: UIImage.self) { (provider, error) in
                     DispatchQueue.main.async {
                         if let image = provider as? UIImage {
+                            print("IMAGE", image)
                             placeholderContext.commitInsertion(dataSourceUpdates: { insertionIndexPath in
                                 self.images.insert(image, at: insertionIndexPath.item)
                             })

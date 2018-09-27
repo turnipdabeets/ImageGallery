@@ -11,19 +11,30 @@ import UIKit
 class ImageGalleryDocumentTableViewController: UITableViewController {
     
     // Assumes currentDocuments are at idx 0 and deletedDocuments are at the last idx
-    var imageGalleryDocuments = [
-        (title: "", items:["One", "Two", "Three"]),
-        (title: "Recently Deleted", items: ["Test"]),
-        ]
+    var gallerySections = [
+        (title: "Image Galleries", galleries:[
+            ImageGallery(title: "Untitled", images: [])
+            ]),
+        (title: "Recently Deleted", galleries:[
+            ImageGallery(title: "test", images: [])
+            ])
+    ]
     var deletedSection: Int {
-        return imageGalleryDocuments.count - 1
+        return gallerySections.count - 1
     }
     var currentSection: Int {
         return 0
     }
     
     @IBAction func newImageGallery(_ sender: UIBarButtonItem) {
-        imageGalleryDocuments[currentSection].items += ["Untitled".madeUnique(withRespectTo: imageGalleryDocuments[currentSection].items)]
+        let galleryNames = Array(
+            gallerySections
+                .map{ $0.galleries }
+                .compactMap({ $0.isEmpty ? [""] : $0.compactMap{ $0.title } })
+                .joined()
+        )
+        let newTitle = "Untitled".madeUnique(withRespectTo: galleryNames)
+        gallerySections[0].galleries.insert(ImageGallery(title: newTitle, images: []), at: 0)
         tableView.reloadData()
     }
     
@@ -38,31 +49,25 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
     // MARK: - Table view data source | UITableViewDataSource
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return imageGalleryDocuments[section].title
+        return gallerySections[section].title
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return imageGalleryDocuments.count
+        // get unique number of groups
+        return gallerySections.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return imageGalleryDocuments[section].items.count
+        return gallerySections[section].galleries.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DocumentCell", for: indexPath)
         // Configure the cell...
-        cell.textLabel?.text = imageGalleryDocuments[indexPath.section].items[indexPath.row]
+        cell.textLabel?.text = gallerySections[indexPath.section].galleries[indexPath.row].title
         
         return cell
     }
-    
-//    // Override to support conditional editing of the table view.
-//    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-//        // Return false if you do not want the specified item to be editable.
-//        // Default is true so currently not necessary to implement
-//        return true
-//    }
     
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -93,7 +98,7 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
                 // remove cell
                 let removed = removeCell(at: indexPath)
                 // add cell to Recently Deleted
-                add(cell: removed, to: deletedSection)
+                add(gallery: removed, to: deletedSection)
             })
             
         } else if editingStyle == .insert {
@@ -111,7 +116,7 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
                     // remove cell
                     let removed = self.removeCell(at: indexPath)
                     // move cell to Current
-                    self.add(cell: removed, to: self.currentSection)
+                    self.add(gallery: removed, to: self.currentSection)
                     // complete action
                     handler(true)
                 })
@@ -125,17 +130,17 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
     }
     
     // Convenience func to sync model and tableView on deletion
-    func removeCell(at indexPath: IndexPath) -> String {
-        let removedCell = imageGalleryDocuments[indexPath.section].items.remove(at: indexPath.row)
+    func removeCell(at indexPath: IndexPath) -> ImageGallery {
+        let removedCell = gallerySections[indexPath.section].galleries.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .fade)
         return removedCell
     }
     // Convenience func to sync model and tableView on addition
-    func add(cell: String, to section: Int){
-        imageGalleryDocuments[section].items += [cell]
+    func add(gallery: ImageGallery, to section: Int){
+        gallerySections[section].galleries += [gallery]
         tableView.insertRows(
             at: [IndexPath(
-                row: imageGalleryDocuments[section].items.count - 1,
+                row: gallerySections[section].galleries.count - 1,
                 section: section)],
             with: .fade)
     }
@@ -170,7 +175,7 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
         if let indexPath = tableView.indexPathForSelectedRow,
             let vc = segue.destination as? ImageGalleryCollectionViewController {
             // pass images to view controller.
-            let gallery = imageGalleryDocuments[indexPath.section].items[indexPath.row]
+            let gallery = gallerySections[indexPath.section].galleries[indexPath.row]
             vc.imagesTest = gallery
         }
     }
