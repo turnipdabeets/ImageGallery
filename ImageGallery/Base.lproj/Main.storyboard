@@ -52,6 +52,26 @@
                                     <outlet property="imageView" destination="6qv-xa-WQ9" id="fXa-v9-BXr"/>
                                 </connections>
                             </collectionViewCell>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DropPlaceholderCell" id="U2B-E0-FDc" customClass="ImageCollectionViewCell" customModule="ImageGallery" customModuleProvider="target">
+                                <rect key="frame" x="65.5" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="UoT-qf-OgK">
+                                            <rect key="frame" x="15" y="15" width="20" height="20"/>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                </view>
+                                <constraints>
+                                    <constraint firstItem="UoT-qf-OgK" firstAttribute="centerY" secondItem="U2B-E0-FDc" secondAttribute="centerY" id="Vrb-pJ-1Qb"/>
+                                    <constraint firstItem="UoT-qf-OgK" firstAttribute="centerX" secondItem="U2B-E0-FDc" secondAttribute="centerX" id="tFJ-wg-gDp"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="activityIndicator" destination="UoT-qf-OgK" id="y9J-UQ-6y9"/>
+                                </connections>
+                            </collectionViewCell>
                         </cells>
                         <connections>
                             <outlet property="dataSource" destination="Yxy-4g-6FV" id="pLW-nG-UZj"/>

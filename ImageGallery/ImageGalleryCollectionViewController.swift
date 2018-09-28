@@ -34,7 +34,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     }
     
     // MARK: UICollectionViewDataSource
-
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return gallery?.images.count ?? 0
     }
@@ -56,38 +56,38 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
         // Configure the imageCell
         if let imageCell = cell as? ImageCollectionViewCell, let url = gallery?.images[indexPath.row].URL {
             // set activity indicator while loading
-                imageCell.loadingState = .isLoading
-                // Start background thread so image loading does not make app unresponsive
-                DispatchQueue.global(qos: .userInitiated).async {
-                    let session = URLSession(configuration: .default)
-                    let downloadTask = session.dataTask(with: url.imageURL) { (data, response, error) in
-                        // The download has finished.
-                        if let e = error {
-                            print("Error downloading picture: \(e)")
-                        } else {
-                            // No errors found.
-                            if let res = response as? HTTPURLResponse {
-                                print("Downloaded picture with response code \(res.statusCode)")
-                                if let imageData = data {
-                                    // UI needs to be updated on main queue
-                                    DispatchQueue.main.async {
-                                        // Done loading
-                                        if let image = UIImage(data: imageData){
-                                            imageCell.loadingState = .loaded(image)
-                                        }
-                                        // TODO REMOVE DATA setting below, ONLY FOR TEST IMAGES WITHOUT DATA
-                                        self.gallery?.images[indexPath.row].data = imageData
+            imageCell.loadingState = .isLoading
+            // Start background thread so image loading does not make app unresponsive
+            DispatchQueue.global(qos: .userInitiated).async {
+                let session = URLSession(configuration: .default)
+                let downloadTask = session.dataTask(with: url.imageURL) { (data, response, error) in
+                    // The download has finished.
+                    if let e = error {
+                        print("Error downloading picture: \(e)")
+                    } else {
+                        // No errors found.
+                        if let res = response as? HTTPURLResponse {
+                            print("Downloaded picture with response code \(res.statusCode)")
+                            if let imageData = data {
+                                // UI needs to be updated on main queue
+                                DispatchQueue.main.async {
+                                    // Done loading
+                                    if let image = UIImage(data: imageData){
+                                        imageCell.loadingState = .loaded(image)
                                     }
-                                } else {
-                                    print("Couldn't get image: Image is nil")
+                                    // TODO REMOVE DATA setting below, ONLY FOR TEST IMAGES WITHOUT DATA
+                                    self.gallery?.images[indexPath.row].data = imageData
                                 }
                             } else {
-                                print("Couldn't get response code for some reason")
+                                print("Couldn't get image: Image is nil")
                             }
+                        } else {
+                            print("Couldn't get response code for some reason")
                         }
                     }
-                    downloadTask.resume()
                 }
+                downloadTask.resume()
+            }
         }
         return cell
     }
@@ -129,7 +129,14 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     
     func collectionView(_ collectionView: UICollectionView, canHandle session: UIDropSession) -> Bool {
         //TODO, local doesnt have URL but need this for remote
-        return session.canLoadObjects(ofClass: UIImage.self)
+        if (collectionView.hasActiveDrag){
+            // local case only
+            return session.canLoadObjects(ofClass: UIImage.self)
+        }else {
+            // remote case need both image for aspect ratio and url
+            return session.canLoadObjects(ofClass: UIImage.self) && session.canLoadObjects(ofClass:URL.self)
+        }
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
@@ -142,11 +149,9 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
         for item in coordinator.items {
-            print("ITEM", item.dragItem)
             // Local Drop
             if let sourceIndexPath = item.sourceIndexPath {
                 if let image = item.dragItem.localObject as? Image {
-                    print("IMAGE")
                     collectionView.performBatchUpdates({
                         gallery?.images.remove(at: sourceIndexPath.item)
                         gallery?.images.insert(image, at: destinationIndexPath.item)
@@ -154,8 +159,9 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                         collectionView.insertItems(at: [destinationIndexPath])
                     })
                 }
-            // External Drop
+                // External Drop
             } else {
+                // get url, aspectratio and data and set as Image
                 let placeholderContext = coordinator.drop(
                     item.dragItem,
                     to:UICollectionViewDropPlaceholder(
@@ -163,13 +169,50 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                         reuseIdentifier: "DropPlaceholderCell"
                     )
                 )
+                // start creation of a new Image
+                var newImage = Image(URL: nil, aspectRatio: 1)
+                // Get UIImage
                 item.dragItem.itemProvider.loadObject(ofClass: UIImage.self) { (provider, error) in
                     DispatchQueue.main.async {
                         if let image = provider as? UIImage {
-                            print("IMAGE", image)
-                            placeholderContext.commitInsertion(dataSourceUpdates: { insertionIndexPath in
-//                                self.gallery?.images.insert(image, at: insertionIndexPath.item)
-                            })
+                            newImage.aspectRatio = Double(image.size.width / image.size.height)
+                        }
+                    }
+                }
+                // Get URL
+                item.dragItem.itemProvider.loadObject(ofClass: URL.self) { (provider, error) in
+                    DispatchQueue.main.async {
+                        if let url = provider?.imageURL {
+                            newImage.URL = url
+                            // Start background thread so image loading does not make app unresponsive
+                            DispatchQueue.global(qos: .userInitiated).async {
+                                URLSession.init(configuration: .default).dataTask(with: url) { (data, response, error) in
+                                    // The download has finished.
+                                    if let e = error {
+                                        print("Error downloading picture: \(e)")
+                                        placeholderContext.deletePlaceholder()
+                                    } else {
+                                        // No errors found.
+                                        if let res = response as? HTTPURLResponse {
+                                            print("Downloaded picture with response code \(res.statusCode)")
+                                            if let imageData = data {
+                                                // UI needs to be updated on main queue
+                                                DispatchQueue.main.async {
+                                                    // Done loading
+                                                    newImage.data = imageData
+                                                    placeholderContext.commitInsertion(dataSourceUpdates: { insertionIndexPath in
+                                                        self.gallery?.images.insert(newImage, at: insertionIndexPath.item)
+                                                    })
+                                                }
+                                            } else {
+                                                print("Couldn't get image: Image is nil")
+                                            }
+                                        } else {
+                                            print("Couldn't get response code for some reason")
+                                        }
+                                    }
+                                    }.resume()
+                            }
                         }
                     }
                 }
