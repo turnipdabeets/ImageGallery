@@ -44,38 +44,8 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
         
         // Configure the imageCell
-        if let imageCell = cell as? ImageCollectionViewCell, let url = gallery?.images[indexPath.row].URL {
-            // set activity indicator while loading
-            imageCell.loadingState = .isLoading
-            // Start background thread so image loading does not make app unresponsive
-            DispatchQueue.global(qos: .userInitiated).async {
-                let session = URLSession(configuration: .default)
-                let downloadTask = session.dataTask(with: url.imageURL) { (data, response, error) in
-                    // The download has finished.
-                    if let e = error {
-                        print("Error downloading picture: \(e)")
-                    } else {
-                        // No errors found.
-                        if let res = response as? HTTPURLResponse {
-                            print("Downloaded picture with response code \(res.statusCode)")
-                            if let imageData = data {
-                                // UI needs to be updated on main queue
-                                DispatchQueue.main.async {
-                                    // Done loading
-                                    if let image = UIImage(data: imageData){
-                                        imageCell.loadingState = .loaded(image)
-                                    }
-                                }
-                            } else {
-                                print("Couldn't get image: Image is nil")
-                            }
-                        } else {
-                            print("Couldn't get response code for some reason")
-                        }
-                    }
-                }
-                downloadTask.resume()
-            }
+        if let imageCell = cell as? ImageCollectionViewCell, let data = gallery?.images[indexPath.row].data, let image = UIImage(data: data) {
+            imageCell.loadingState = .loaded(image)
         }
         return cell
     }
