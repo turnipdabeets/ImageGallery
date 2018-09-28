@@ -41,17 +41,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // Get cell by reuseIdentifier
-        var cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
-        
-        ///// Random Colors to see how often images are reloaded
-        func random() -> CGFloat {
-            return CGFloat(arc4random()) / CGFloat(UInt32.max)
-        }
-        cell.backgroundColor = UIColor(red:   random(),
-                                       green: random(),
-                                       blue:  random(),
-                                       alpha: 1.0)
-        ///// ----
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
         
         // Configure the imageCell
         if let imageCell = cell as? ImageCollectionViewCell, let url = gallery?.images[indexPath.row].URL {
@@ -75,8 +65,6 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                                     if let image = UIImage(data: imageData){
                                         imageCell.loadingState = .loaded(image)
                                     }
-                                    // TODO REMOVE DATA setting below, ONLY FOR TEST IMAGES WITHOUT DATA
-                                    self.gallery?.images[indexPath.row].data = imageData
                                 }
                             } else {
                                 print("Couldn't get image: Image is nil")
@@ -172,7 +160,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                 // start creation of a new Image
                 var newImage = Image(URL: nil, aspectRatio: 1)
                 // Get UIImage
-                item.dragItem.itemProvider.loadObject(ofClass: UIImage.self) { (provider, error) in
+               _ = item.dragItem.itemProvider.loadObject(ofClass: UIImage.self) { (provider, error) in
                     DispatchQueue.main.async {
                         if let image = provider as? UIImage {
                             newImage.aspectRatio = Double(image.size.width / image.size.height)
@@ -180,7 +168,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                     }
                 }
                 // Get URL
-                item.dragItem.itemProvider.loadObject(ofClass: URL.self) { (provider, error) in
+               _ = item.dragItem.itemProvider.loadObject(ofClass: URL.self) { (provider, error) in
                     DispatchQueue.main.async {
                         if let url = provider?.imageURL {
                             newImage.URL = url

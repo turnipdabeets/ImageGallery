@@ -15,11 +15,7 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
         (title: "Image Galleries", galleries:[
             ImageGallery(
                 title: "Untitled",
-                images: [
-                    Image(URL: URL(string: "https://www.jamiesale-cartoonist.com/wp-content/uploads/cartoon-cat-free-1024x1024.png")!, aspectRatio: 1.0
-                    ), Image(URL: URL(string: "http://artforcatssake.org/clients/20295/images/11139968_797708487004033_5042467130001247771_n.jpg")!, aspectRatio: 1.0
-                    )
-                ])
+                images: [])
             ]),
         (title: "Recently Deleted", galleries:[
             ImageGallery(title: "test", images: [])
