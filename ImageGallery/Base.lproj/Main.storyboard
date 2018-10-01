@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -50,6 +51,7 @@
                                 <connections>
                                     <outlet property="activityIndicator" destination="3of-jd-gNP" id="Xva-Wg-LX1"/>
                                     <outlet property="imageView" destination="6qv-xa-WQ9" id="fXa-v9-BXr"/>
+                                    <segue destination="Q6B-E4-uV1" kind="show" id="zwK-dR-BUv"/>
                                 </connections>
                             </collectionViewCell>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DropPlaceholderCell" id="U2B-E0-FDc" customClass="ImageCollectionViewCell" customModule="ImageGallery" customModuleProvider="target">
@@ -83,6 +85,35 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CVz-wb-cwN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="865.625" y="-236.13281249999997"/>
+        </scene>
+        <!--Image Display View Controller-->
+        <scene sceneID="Lub-6n-VjM">
+            <objects>
+                <viewController id="Q6B-E4-uV1" customClass="ImageDisplayViewController" customModule="ImageGallery" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Fea-60-UCD">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vYo-h2-0Uo">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="vYo-h2-0Uo" secondAttribute="bottom" id="2rv-nn-rzo"/>
+                            <constraint firstItem="vYo-h2-0Uo" firstAttribute="leading" secondItem="Fea-60-UCD" secondAttribute="leading" id="Tfu-av-a7D"/>
+                            <constraint firstItem="vYo-h2-0Uo" firstAttribute="top" secondItem="Fea-60-UCD" secondAttribute="top" id="Xb3-M3-DIy"/>
+                            <constraint firstAttribute="trailing" secondItem="vYo-h2-0Uo" secondAttribute="trailing" id="eTn-dv-jLw"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="JCb-Ln-2az"/>
+                    </view>
+                    <connections>
+                        <outlet property="scrollView" destination="vYo-h2-0Uo" id="AdM-9p-3ha"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AYP-kI-vZF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1532" y="-231"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="KSR-aa-Wkd">

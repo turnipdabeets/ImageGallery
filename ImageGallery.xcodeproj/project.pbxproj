@@ -12,6 +12,7 @@
 		A91D99E4215AD69A003D4997 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A91D99E3215AD69A003D4997 /* Assets.xcassets */; };
 		A91D99E7215AD69A003D4997 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A91D99E5215AD69A003D4997 /* LaunchScreen.storyboard */; };
 		A91D99F2215AD99A003D4997 /* ImageGalleryDocumentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91D99F1215AD99A003D4997 /* ImageGalleryDocumentTableViewController.swift */; };
+		A927483D2162C42C002D4755 /* ImageDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A927483C2162C42C002D4755 /* ImageDisplayViewController.swift */; };
 		A99F2C74215AE70700432F21 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F2C73215AE70700432F21 /* Utilities.swift */; };
 		A99F2C76215BF22C00432F21 /* ImageGalleryCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F2C75215BF22C00432F21 /* ImageGalleryCollectionViewController.swift */; };
 		A99F2C7A215BF73500432F21 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F2C79215BF73500432F21 /* ImageCollectionViewCell.swift */; };
@@ -26,6 +27,7 @@
 		A91D99E6215AD69A003D4997 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A91D99E8215AD69A003D4997 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A91D99F1215AD99A003D4997 /* ImageGalleryDocumentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGalleryDocumentTableViewController.swift; sourceTree = "<group>"; };
+		A927483C2162C42C002D4755 /* ImageDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDisplayViewController.swift; sourceTree = "<group>"; };
 		A99F2C73215AE70700432F21 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		A99F2C75215BF22C00432F21 /* ImageGalleryCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGalleryCollectionViewController.swift; sourceTree = "<group>"; };
 		A99F2C79215BF73500432F21 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 				A99F2C75215BF22C00432F21 /* ImageGalleryCollectionViewController.swift */,
 				A99F2C73215AE70700432F21 /* Utilities.swift */,
 				A99F2C79215BF73500432F21 /* ImageCollectionViewCell.swift */,
+				A927483C2162C42C002D4755 /* ImageDisplayViewController.swift */,
 			);
 			path = ImageGallery;
 			sourceTree = "<group>";
@@ -157,6 +160,7 @@
 			files = (
 				A99F2C7C215C6D5400432F21 /* ImageGallery.swift in Sources */,
 				A99F2C7A215BF73500432F21 /* ImageCollectionViewCell.swift in Sources */,
+				A927483D2162C42C002D4755 /* ImageDisplayViewController.swift in Sources */,
 				A99F2C76215BF22C00432F21 /* ImageGalleryCollectionViewController.swift in Sources */,
 				A91D99F2215AD99A003D4997 /* ImageGalleryDocumentTableViewController.swift in Sources */,
 				A99F2C74215AE70700432F21 /* Utilities.swift in Sources */,
