@@ -94,16 +94,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vYo-h2-0Uo">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="768" placeholderIntrinsicHeight="1024" translatesAutoresizingMaskIntoConstraints="NO" id="vYo-h2-0Uo">
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                                 <subviews>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="b7A-sh-VVQ">
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" placeholderIntrinsicWidth="20" placeholderIntrinsicHeight="20" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="b7A-sh-VVQ">
                                         <rect key="frame" x="374" y="438" width="20" height="20"/>
                                     </activityIndicatorView>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="b7A-sh-VVQ" secondAttribute="bottom" constant="502" id="177-NT-XSw"/>
                                     <constraint firstItem="b7A-sh-VVQ" firstAttribute="centerY" secondItem="vYo-h2-0Uo" secondAttribute="centerY" id="3Gg-QE-c8D"/>
+                                    <constraint firstAttribute="trailing" secondItem="b7A-sh-VVQ" secondAttribute="trailing" constant="374" id="FpI-8H-TgL"/>
+                                    <constraint firstItem="b7A-sh-VVQ" firstAttribute="top" secondItem="vYo-h2-0Uo" secondAttribute="top" constant="502" id="abb-pb-4jy"/>
                                     <constraint firstItem="b7A-sh-VVQ" firstAttribute="centerX" secondItem="vYo-h2-0Uo" secondAttribute="centerX" id="rhw-JZ-4UM"/>
+                                    <constraint firstItem="b7A-sh-VVQ" firstAttribute="leading" secondItem="vYo-h2-0Uo" secondAttribute="leading" constant="374" id="wlx-JL-opD"/>
                                 </constraints>
                             </scrollView>
                         </subviews>

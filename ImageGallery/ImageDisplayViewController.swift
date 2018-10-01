@@ -25,7 +25,7 @@ class ImageDisplayViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @IBOutlet weak var spinner: UIActivityIndicatorView!
-
+    
     @IBOutlet weak var scrollView: UIScrollView! {
         didSet {
             scrollView.minimumZoomScale = 1/25
@@ -39,7 +39,7 @@ class ImageDisplayViewController: UIViewController, UIScrollViewDelegate {
         return imageView
     }
     
-  
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchImage()
@@ -57,5 +57,5 @@ class ImageDisplayViewController: UIViewController, UIScrollViewDelegate {
             }
         }
     }
-
+    
 }
