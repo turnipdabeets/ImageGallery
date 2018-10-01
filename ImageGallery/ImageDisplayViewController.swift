@@ -20,8 +20,11 @@ class ImageDisplayViewController: UIViewController, UIScrollViewDelegate {
             imageView.image = newValue
             imageView.sizeToFit()
             scrollView.contentSize = imageView.frame.size
+            spinner?.stopAnimating()
         }
     }
+    
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
 
     @IBOutlet weak var scrollView: UIScrollView! {
         didSet {
@@ -36,20 +39,23 @@ class ImageDisplayViewController: UIViewController, UIScrollViewDelegate {
         return imageView
     }
     
+  
     override func viewDidLoad() {
         super.viewDidLoad()
+        fetchImage()
+    }
+    
+    private func fetchImage() {
         if let url = imageUrl {
-            fetchImage(with: url)
-        }else {
-            // didn't get image url... how to handle?
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in // weak self, not because of memory cycle, but asynchronous nature.
+                let urlContents = try? Data(contentsOf: url)
+                DispatchQueue.main.async {
+                    if let imageData = urlContents, url == self?.imageUrl { // async fetching still the same url?
+                        self?.image = UIImage(data: imageData)
+                    }
+                }
+            }
         }
     }
-    
-    private func fetchImage(with imageURL: URL) {
-        let urlContents = try? Data(contentsOf: imageURL)
-        if let imageData = urlContents {
-            image = UIImage(data: imageData)
-        }
-    }
-    
+
 }

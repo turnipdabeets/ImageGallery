@@ -184,6 +184,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
      override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
      // Get the new view controller using [segue destinationViewController].
         if let indexPath = collectionView?.indexPathsForSelectedItems, let vc = segue.destination as? ImageDisplayViewController {
+            print("pass data?", gallery?.images[indexPath[0].row].data)
             vc.imageUrl = gallery?.images[indexPath[0].row].URL
         }
      // Pass the selected object to the new view controller.
