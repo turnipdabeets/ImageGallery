@@ -175,7 +175,7 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
     // Preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let indexPath = tableView.indexPathForSelectedRow,
-            let vc = segue.destination as? ImageGalleryCollectionViewController {
+            let nav = segue.destination as? UINavigationController, let vc = nav.topViewController as? ImageGalleryCollectionViewController{
             // pass images to view controller.
             let gallery = gallerySections[indexPath.section].galleries[indexPath.row]
             vc.gallery = gallery
