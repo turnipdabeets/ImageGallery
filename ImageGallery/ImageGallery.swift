@@ -30,6 +30,10 @@ struct ImageGallery {
 // Model representing museum
 class Museum {
     // Assumes currentDocuments are at idx 0 and deletedDocuments are at the last idx
+    
+    // singlton approach
+    static let shared = Museum()
+    
     var gallerySections = [
         (title: "Image Galleries", galleries:[
             ImageGallery(

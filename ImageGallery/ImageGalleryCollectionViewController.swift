@@ -15,13 +15,13 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     //    var gallery: ImageGallery?
     var gallerySection: Int!
     var galleryNumber: Int!
-    var museum: Museum?
+    var museum = Museum.shared
     
     var gallery: ImageGallery? {
-        guard galleryNumber != nil || gallerySection != nil || museum != nil else {
+        guard galleryNumber != nil || gallerySection != nil else {
             return nil
         }
-        return museum?.gallerySections[gallerySection].galleries[galleryNumber]
+        return museum.gallerySections[gallerySection].galleries[galleryNumber]
     }
     
     private var imageWidth: CGFloat {
@@ -31,7 +31,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("V2", museum?.gallerySections ?? "none")
+        print("V2", museum.gallerySections ?? "none")
         // enable drag for iPhone
         collectionView?.dragInteractionEnabled = true
         // set delegate
@@ -121,8 +121,8 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
             if let sourceIndexPath = item.sourceIndexPath {
                 if let image = item.dragItem.localObject as? Image {
                     collectionView.performBatchUpdates({
-                        museum?.remove(image: image,at: sourceIndexPath.item, for: gallerySection, galleryNumber: galleryNumber)
-                        museum?.add(image: image, at: destinationIndexPath.item, for: gallerySection, galleryNumber: galleryNumber)
+                        museum.remove(image: image,at: sourceIndexPath.item, for: gallerySection, galleryNumber: galleryNumber)
+                        museum.add(image: image, at: destinationIndexPath.item, for: gallerySection, galleryNumber: galleryNumber)
                         collectionView.deleteItems(at: [sourceIndexPath])
                         collectionView.insertItems(at: [destinationIndexPath])
                     })
@@ -169,7 +169,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                                                     // Done loading
                                                     newImage.data = imageData
                                                     placeholderContext.commitInsertion(dataSourceUpdates: { insertionIndexPath in
-                                                        self.museum?.add(image: newImage, at: insertionIndexPath.item, for: self.gallerySection, galleryNumber: self.galleryNumber)
+                                                        self.museum.add(image: newImage, at: insertionIndexPath.item, for: self.gallerySection, galleryNumber: self.galleryNumber)
                                                     })
                                                 }
                                             } else {

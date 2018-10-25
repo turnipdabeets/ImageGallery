@@ -10,7 +10,7 @@ import UIKit
 
 class ImageGalleryDocumentTableViewController: UITableViewController {
     
-    var museum = Museum()
+    var museum = Museum.shared
     
     @IBAction func newImageGallery(_ sender: UIBarButtonItem) {
         let newTitle = "Untitled".madeUnique(withRespectTo: museum.galleryNames)
@@ -96,7 +96,7 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
                     // remove cell
                     let removed = self.removeCell(at: indexPath)
                     // move cell to Current
-                    self.museum.add(gallery: removed, to: self.museum.currentSection)
+                    self.add(gallery: removed, to: self.museum.currentSection)
                     // complete action
                     handler(true)
                 })
