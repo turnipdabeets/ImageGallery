@@ -151,23 +151,29 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DocumentCell" textLabel="l39-aV-M2J" style="IBUITableViewCellStyleDefault" id="yVI-SB-gqY">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="DocumentCell" id="yVI-SB-gqY" customClass="GalleryTableViewCell" customModule="ImageGallery" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yVI-SB-gqY" id="HEu-TV-laB">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="l39-aV-M2J">
-                                            <rect key="frame" x="16" y="0.0" width="288" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="uEd-d1-gZs">
+                                            <rect key="frame" x="10" y="10" width="300" height="23.5"/>
                                             <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="uEd-d1-gZs" firstAttribute="top" secondItem="HEu-TV-laB" secondAttribute="top" constant="10" id="WS9-Fr-jch"/>
+                                        <constraint firstAttribute="trailing" secondItem="uEd-d1-gZs" secondAttribute="trailing" constant="10" id="caA-85-Act"/>
+                                        <constraint firstAttribute="bottom" secondItem="uEd-d1-gZs" secondAttribute="bottom" constant="10" id="rPV-2K-IBr"/>
+                                        <constraint firstItem="uEd-d1-gZs" firstAttribute="leading" secondItem="HEu-TV-laB" secondAttribute="leading" constant="10" id="uYK-mD-RNb"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="textField" destination="uEd-d1-gZs" id="yg4-qg-w2n"/>
                                     <segue destination="HM4-Sc-5gc" kind="showDetail" id="OUy-gk-QtN"/>
                                 </connections>
                             </tableViewCell>
