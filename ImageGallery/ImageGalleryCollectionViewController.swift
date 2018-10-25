@@ -12,7 +12,17 @@ private let reuseIdentifier = "ImageCell"
 
 class ImageGalleryCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate, UICollectionViewDropDelegate {
     
-    var gallery: ImageGallery?
+    //    var gallery: ImageGallery?
+    var gallerySection: Int!
+    var galleryNumber: Int!
+    var museum: Museum?
+    
+    var gallery: ImageGallery? {
+        guard galleryNumber != nil || gallerySection != nil || museum != nil else {
+            return nil
+        }
+        return museum?.gallerySections[gallerySection].galleries[galleryNumber]
+    }
     
     private var imageWidth: CGFloat {
         guard let collectionView = collectionView else { return 0 }
@@ -21,6 +31,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("V2", museum?.gallerySections ?? "none")
         // enable drag for iPhone
         collectionView?.dragInteractionEnabled = true
         // set delegate
@@ -73,8 +84,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
     }
     
     private func dragItems(at indexPath: IndexPath) -> [UIDragItem] {
-        if let _ = collectionView?.cellForItem(at: indexPath) as? ImageCollectionViewCell,
-            let image = gallery?.images[indexPath.row]{
+        if let _ = collectionView?.cellForItem(at: indexPath) as? ImageCollectionViewCell, let image = gallery?.images[indexPath.row] {
             let dragItem = UIDragItem(itemProvider: NSItemProvider(object: UIImage(data: image.data!)!))
             // pass Image type for local droping
             dragItem.localObject = image
@@ -111,8 +121,8 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
             if let sourceIndexPath = item.sourceIndexPath {
                 if let image = item.dragItem.localObject as? Image {
                     collectionView.performBatchUpdates({
-                        gallery?.images.remove(at: sourceIndexPath.item)
-                        gallery?.images.insert(image, at: destinationIndexPath.item)
+                        museum?.remove(image: image,at: sourceIndexPath.item, for: gallerySection, galleryNumber: galleryNumber)
+                        museum?.add(image: image, at: destinationIndexPath.item, for: gallerySection, galleryNumber: galleryNumber)
                         collectionView.deleteItems(at: [sourceIndexPath])
                         collectionView.insertItems(at: [destinationIndexPath])
                     })
@@ -130,7 +140,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                 // start creation of a new Image
                 var newImage = Image(URL: nil, aspectRatio: 1)
                 // Get UIImage
-               _ = item.dragItem.itemProvider.loadObject(ofClass: UIImage.self) { (provider, error) in
+                _ = item.dragItem.itemProvider.loadObject(ofClass: UIImage.self) { (provider, error) in
                     DispatchQueue.main.async {
                         if let image = provider as? UIImage {
                             newImage.aspectRatio = Double(image.size.width / image.size.height)
@@ -138,7 +148,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                     }
                 }
                 // Get URL
-               _ = item.dragItem.itemProvider.loadObject(ofClass: URL.self) { (provider, error) in
+                _ = item.dragItem.itemProvider.loadObject(ofClass: URL.self) { (provider, error) in
                     DispatchQueue.main.async {
                         if let url = provider?.imageURL {
                             newImage.URL = url
@@ -159,7 +169,7 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
                                                     // Done loading
                                                     newImage.data = imageData
                                                     placeholderContext.commitInsertion(dataSourceUpdates: { insertionIndexPath in
-                                                        self.gallery?.images.insert(newImage, at: insertionIndexPath.item)
+                                                        self.museum?.add(image: newImage, at: insertionIndexPath.item, for: self.gallerySection, galleryNumber: self.galleryNumber)
                                                     })
                                                 }
                                             } else {
@@ -178,17 +188,16 @@ class ImageGalleryCollectionViewController: UICollectionViewController, UICollec
         }
     }
     
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using [segue destinationViewController].
+    // MARK: - Navigation
+    
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using [segue destinationViewController].
         if let indexPath = collectionView?.indexPathsForSelectedItems, let vc = segue.destination as? ImageDisplayViewController {
-            print("pass data?", gallery?.images[indexPath[0].row].data)
             vc.imageUrl = gallery?.images[indexPath[0].row].URL
         }
-     // Pass the selected object to the new view controller.
-     }
+        // Pass the selected object to the new view controller.
+    }
     
     // MARK: UICollectionViewDelegate
     

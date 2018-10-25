@@ -10,33 +10,11 @@ import UIKit
 
 class ImageGalleryDocumentTableViewController: UITableViewController {
     
-    // Assumes currentDocuments are at idx 0 and deletedDocuments are at the last idx
-    var gallerySections = [
-        (title: "Image Galleries", galleries:[
-            ImageGallery(
-                title: "Untitled",
-                images: [])
-            ]),
-        (title: "Recently Deleted", galleries:[
-            ImageGallery(title: "test", images: [])
-            ])
-    ]
-    var deletedSection: Int {
-        return gallerySections.count - 1
-    }
-    var currentSection: Int {
-        return 0
-    }
+    var museum = Museum()
     
     @IBAction func newImageGallery(_ sender: UIBarButtonItem) {
-        let galleryNames = Array(
-            gallerySections
-                .map{ $0.galleries }
-                .compactMap({ $0.isEmpty ? [""] : $0.compactMap{ $0.title } })
-                .joined()
-        )
-        let newTitle = "Untitled".madeUnique(withRespectTo: galleryNames)
-        gallerySections[0].galleries.insert(ImageGallery(title: newTitle, images: []), at: 0)
+        let newTitle = "Untitled".madeUnique(withRespectTo: museum.galleryNames)
+        museum.createNewGallery(with: newTitle)
         tableView.reloadData()
     }
     
@@ -51,22 +29,22 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
     // MARK: - Table view data source | UITableViewDataSource
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return gallerySections[section].title
+        return museum.gallerySections[section].title
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         // get unique number of groups
-        return gallerySections.count
+        return museum.gallerySections.count
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return gallerySections[section].galleries.count
+        return museum.gallerySections[section].galleries.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DocumentCell", for: indexPath)
         // Configure the cell...
-        cell.textLabel?.text = gallerySections[indexPath.section].galleries[indexPath.row].title
+        cell.textLabel?.text = museum.gallerySections[indexPath.section].galleries[indexPath.row].title
         
         return cell
     }
@@ -75,7 +53,7 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Permanently Delete
-            if indexPath.section == deletedSection {
+            if indexPath.section == museum.deletedSection {
                 // Present dialog before permanently deleting
                 let dialogMessage = UIAlertController(
                     title: "Confirm",
@@ -100,7 +78,7 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
                 // remove cell
                 let removed = removeCell(at: indexPath)
                 // add cell to Recently Deleted
-                add(gallery: removed, to: deletedSection)
+                add(gallery: removed, to: museum.deletedSection)
             })
             
         } else if editingStyle == .insert {
@@ -110,7 +88,7 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        if indexPath.section == deletedSection {
+        if indexPath.section == museum.deletedSection {
             // Swiping Delete Row Only
             let recoverAction = UIContextualAction(style: .destructive, title: "Recover") { (action, view, handler) in
                 // Recover Document
@@ -118,7 +96,7 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
                     // remove cell
                     let removed = self.removeCell(at: indexPath)
                     // move cell to Current
-                    self.add(gallery: removed, to: self.currentSection)
+                    self.museum.add(gallery: removed, to: self.museum.currentSection)
                     // complete action
                     handler(true)
                 })
@@ -133,16 +111,16 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
     
     // Convenience func to sync model and tableView on deletion
     func removeCell(at indexPath: IndexPath) -> ImageGallery {
-        let removedCell = gallerySections[indexPath.section].galleries.remove(at: indexPath.row)
+        let removedCell = museum.removeGallery(from: indexPath.section, at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .fade)
         return removedCell
     }
     // Convenience func to sync model and tableView on addition
     func add(gallery: ImageGallery, to section: Int){
-        gallerySections[section].galleries += [gallery]
+        museum.add(gallery: gallery, to: section)
         tableView.insertRows(
             at: [IndexPath(
-                row: gallerySections[section].galleries.count - 1,
+                row: museum.gallerySections[section].galleries.count - 1,
                 section: section)],
             with: .fade)
     }
@@ -166,7 +144,7 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
         // Prevent Segue from Recently Deleted
-        if let indexPath = tableView.indexPathForSelectedRow, indexPath.section == deletedSection {
+        if let indexPath = tableView.indexPathForSelectedRow, indexPath.section == museum.deletedSection {
             return false
         }
         return true
@@ -177,8 +155,10 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
         if let indexPath = tableView.indexPathForSelectedRow,
             let nav = segue.destination as? UINavigationController, let vc = nav.topViewController as? ImageGalleryCollectionViewController{
             // pass images to view controller.
-            let gallery = gallerySections[indexPath.section].galleries[indexPath.row]
-            vc.gallery = gallery
+            print(museum.gallerySections[0]); print(museum.gallerySections[indexPath.section].galleries[indexPath.row])
+            vc.gallerySection = indexPath.section
+            vc.galleryNumber = indexPath.row
+            vc.museum = museum
         }
     }
 }
