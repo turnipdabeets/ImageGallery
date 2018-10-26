@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ImageGalleryDocumentTableViewController: UITableViewController {
+class ImageGalleryDocumentTableViewController: UITableViewController, GallerySelectionTableViewCellDelegate {
     
     var museum = Museum.shared
     
@@ -16,6 +16,13 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
         let newTitle = "Untitled".madeUnique(withRespectTo: museum.galleryNames)
         museum.createNewGallery(with: newTitle)
         tableView.reloadData()
+    }
+    
+    func titleDidChange(_ title: String, in cell: UITableViewCell) {
+        if let indexPath = tableView.indexPath(for: cell) {
+            museum.setGallery(title: title, at: indexPath)
+            tableView.reloadData()
+        }
     }
     
     // Allow to swipe (master) TableView out of (detail) Image Gallery's way
@@ -44,7 +51,10 @@ class ImageGalleryDocumentTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DocumentCell", for: indexPath)
         // Configure the cell...
-        cell.textLabel?.text = museum.gallerySections[indexPath.section].galleries[indexPath.row].title
+        if let galleryCell = cell as? GalleryTableViewCell {
+            galleryCell.delegate = self
+            galleryCell.title = museum.gallerySections[indexPath.section].galleries[indexPath.row].title
+        }
         
         return cell
     }

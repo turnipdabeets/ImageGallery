@@ -78,5 +78,11 @@ class Museum {
     func remove(image: Image, at indexPath: Int, for section: Int, galleryNumber row: Int){
         gallerySections[section].galleries[row].images.remove(at: indexPath)
     }
+    
+    func setGallery(title: String, at indexPath: IndexPath) {
+        return gallerySections[indexPath.section].galleries[indexPath.row].title = title
+    }
+    
+    
 }
 
